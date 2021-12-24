@@ -1,0 +1,25 @@
+resource "aws_lambda_function" "lambda_function" {
+  #count         = length(var.api_gateway_stages)
+  for_each      = toset(var.api_gateway_stages)
+  function_name = "${var.lambda_project_name}_${each.key}"
+  role          = aws_iam_role.lambda_iam_role.arn
+  handler       = "${var.lambda_script_name}.${var.lambda_handler}"
+  runtime       = var.lambda_runtime
+  s3_bucket     = var.lambda_codebase_bucket
+  s3_key        = "${var.lambda_project_name}.zip"
+  memory_size   = var.lambda_memory_size
+  timeout       = var.lambda_timeout
+  tags = merge({
+    module           = "apigw_lambda",
+    lambda_code_repo = var.lambda_code_repo,
+    env              = each.key
+  }, var.tags, var.default_tags)
+
+  environment {
+    variables = var.environment_variables[each.key]
+  }
+
+  depends_on = [
+    aws_s3_bucket_object.code_base_package
+  ]
+}
