@@ -71,7 +71,7 @@ variable "api_gateway_domain_name_mapping" {
   default     = {}
 }
 
-variable "api_gateway_api_key" {
+variable "use_api_gateway_api_key" {
   description = "Set this variable to true if you want your calls to be protected by an api_key"
   type        = bool
   default     = false
