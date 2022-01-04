@@ -91,3 +91,9 @@ variable "apigw_cloudwatch_logs_format" {
   description = "https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html#apigateway-cloudwatch-log-formats"
   default     = "{ \"requestId\":\"$context.requestId\", \"ip\": \"$context.identity.sourceIp\", \"requestTime\":\"$context.requestTime\", \"httpMethod\":\"$context.httpMethod\",\"routeKey\":\"$context.routeKey\", \"status\":\"$context.status\",\"protocol\":\"$context.protocol\", \"responseLength\":\"$context.responseLength\" }"
 }
+
+variable "store_api_keys_in_ssm" {
+  description = "Set this variable to true if you want your generated api keys in SSM/ParameterStore"
+  type        = bool
+  default     = false
+}

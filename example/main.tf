@@ -78,6 +78,7 @@ module "my_example_module" {
   }
   use_api_gateway                       = true
   use_api_gateway_api_key               = true
+  store_api_keys_in_ssm                 = true
   api_gateway_domain_name_mapping       = var.apigw_domain_name_mapping
   api_gateway_path                      = "mypath"
   api_gateway_stages                    = ["production", "staging"]
