@@ -65,6 +65,12 @@ variable "api_gateway_path" {
   default     = "not_defined"
 }
 
+variable "api_gateway_domain_name_mapping" {
+  description = "The custom domain name mapping you want your API Gateway respond to"
+  type        = map(string)
+  default     = {}
+}
+
 variable "api_gateway_api_key" {
   description = "Set this variable to true if you want your calls to be protected by an api_key"
   type        = bool
@@ -79,10 +85,6 @@ variable "api_gateway_stages" {
 
 variable "lambda_codebase_bucket" {
   description = "The s3 bucket where are the code package"
-}
-
-variable "api_gateway_custom_domain" {
-  description = "The custom domain name map to the rest api"
 }
 
 variable "apigw_cloudwatch_logs_format" {

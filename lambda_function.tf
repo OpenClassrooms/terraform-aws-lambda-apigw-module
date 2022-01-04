@@ -1,8 +1,7 @@
 resource "aws_lambda_function" "lambda_function" {
-  #count         = length(var.api_gateway_stages)
   for_each      = toset(var.api_gateway_stages)
   function_name = "${var.lambda_project_name}_${each.key}"
-  role          = aws_iam_role.lambda_iam_role.arn
+  role          = aws_iam_role.lambda_iam_role[each.key].arn
   handler       = "${var.lambda_script_name}.${var.lambda_handler}"
   runtime       = var.lambda_runtime
   s3_bucket     = var.lambda_codebase_bucket

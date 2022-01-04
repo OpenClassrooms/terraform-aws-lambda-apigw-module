@@ -12,10 +12,10 @@ provider "aws" {
   region = var.aws_region
 }
 
-# provider "aws" {
-#   alias  = "north-virginia"
-#   region = "us-east-1"
-# }
+provider "aws" {
+  alias  = "north-virginia"
+  region = "us-east-1"
+}
 
 # Cloudflare part (for API GW DNS name)
 provider "cloudflare" {

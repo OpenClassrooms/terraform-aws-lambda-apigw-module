@@ -11,9 +11,13 @@ variable "tags" {
   }
 }
 
-variable "apigw_domain_name" {
-  description = "The custom domain name you want your API Gateway respond to"
-  default     = "apigwv2.openclassrooms.com"
+variable "apigw_domain_name_mapping" {
+  description = "The custom domain name mapping you want your API Gateway respond to"
+  type        = map(string)
+  default = {
+    staging    = "apigw-staging.mydomain.com"
+    production = "apigw.mydomain.com"
+  }
 }
 
 variable "cloudflare_zone_id" {

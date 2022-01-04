@@ -1,5 +1,6 @@
 resource "aws_cloudwatch_log_group" "lambda_aws_cloudwatch_log_group" {
-  name              = "/aws/lambda/${var.lambda_project_name}"
+  for_each          = toset(var.api_gateway_stages)
+  name              = "/aws/lambda/${each.key}/${var.lambda_project_name}"
   retention_in_days = var.lambda_cloudwatch_logs_retention
   tags = merge({
     module           = "apigw_lambda",
@@ -8,7 +9,8 @@ resource "aws_cloudwatch_log_group" "lambda_aws_cloudwatch_log_group" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway_aws_cloudwatch_log_group" {
-  name              = "/aws/apigateway/${var.lambda_project_name}"
+  for_each          = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
+  name              = "/aws/apigateway/${each.key}/${var.lambda_project_name}"
   retention_in_days = var.api_gateway_cloudwatch_logs_retention
   tags = merge({
     module           = "apigw_lambda",
