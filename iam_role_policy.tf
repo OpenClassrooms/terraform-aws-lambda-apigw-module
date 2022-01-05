@@ -1,8 +1,7 @@
 resource "aws_iam_role_policy" "lambda_iam_role_policy_allow_logging_to_log_group" {
-  for_each = toset(var.api_gateway_stages)
-  name     = "${each.key}_lambda_${var.lambda_project_name}"
-  role     = aws_iam_role.lambda_iam_role[each.key].name
-  policy   = <<EOF
+  name   = "lambda_${var.lambda_project_name}"
+  role   = aws_iam_role.lambda_iam_role.name
+  policy = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -12,9 +11,7 @@ resource "aws_iam_role_policy" "lambda_iam_role_policy_allow_logging_to_log_grou
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
             ],
-            "Resource": [
-                "${aws_cloudwatch_log_group.lambda_aws_cloudwatch_log_group[each.key].arn}:*"
-            ]
+            "Resource": "*"
         }
     ]
 }
@@ -22,9 +19,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch" {
-  for_each = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
-  name     = "${each.key}_cw_${var.lambda_project_name}"
-  role     = aws_iam_role.cloudwatch[each.key].id
+  name = "cw_${var.lambda_project_name}"
+  role = aws_iam_role.cloudwatch_iam_role.id
 
   policy = <<EOF
 {

@@ -1,6 +1,5 @@
 resource "aws_iam_role" "lambda_iam_role" {
-  for_each           = toset(var.api_gateway_stages)
-  name               = substr("${each.key}_${var.lambda_project_name}", 0, 64)
+  name               = substr("lambda_${var.lambda_project_name}", 0, 64)
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -23,16 +22,15 @@ EOF
 }
 
 
-resource "aws_iam_role" "cloudwatch" {
-  for_each = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
-  name     = substr("${each.key}_apigw_cw_${var.lambda_project_name}", 0, 64)
+resource "aws_iam_role" "cloudwatch_iam_role" {
+  name = substr("apigw_cw_${var.lambda_project_name}", 0, 64)
 
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "",
+      "Sid": "${substr("apigw_cw_${var.lambda_project_name}", 0, 64)}",
       "Effect": "Allow",
       "Principal": {
         "Service": "apigateway.amazonaws.com"
@@ -42,4 +40,8 @@ resource "aws_iam_role" "cloudwatch" {
   ]
 }
 EOF
+  tags = merge({
+    module           = "apigw_lambda",
+    lambda_code_repo = var.lambda_code_repo
+  }, var.tags, var.default_tags)
 }
