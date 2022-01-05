@@ -30,7 +30,7 @@ resource "aws_iam_role" "cloudwatch_iam_role" {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "${substr("apigw_cw_${var.lambda_project_name}", 0, 64)}",
+      "Sid": "${replace(substr("apigw_cw_${var.lambda_project_name}", 0, 64),"/-|_/","")}",
       "Effect": "Allow",
       "Principal": {
         "Service": "apigateway.amazonaws.com"
