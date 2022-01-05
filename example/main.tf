@@ -6,6 +6,60 @@ resource "aws_s3_bucket" "my-lambda-codebase-bucket" {
   tags = var.tags
 }
 
+# we need a unique api-gateway account to allow api gateway to send logs in cloudwatch
+resource "aws_api_gateway_account" "api-gw-account" {
+  cloudwatch_role_arn = aws_iam_role.cloudwatch_iam_role.arn
+}
+
+# Attach an iam role to aws_api_gateway_account
+resource "aws_iam_role" "cloudwatch_iam_role" {
+  name = "apigw_cloudwatch_iam_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ApiGWCloudwatchIamRolePolicy",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+  tags               = var.tags
+}
+
+# Attach a role policy to the previous role
+resource "aws_iam_role_policy" "apigw_to_cloudwatch_role_policy" {
+  name = "apigw_to_cloudwatch_role_policy"
+  role = aws_iam_role.cloudwatch_iam_role.id
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
+
 # Not mandatory, but useful
 
 # First, we declare a pretty domain name for the API Gateway

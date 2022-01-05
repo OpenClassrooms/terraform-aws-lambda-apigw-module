@@ -1,8 +1,3 @@
-resource "aws_api_gateway_account" "api-gw-account" {
-  for_each            = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
-  cloudwatch_role_arn = aws_iam_role.cloudwatch_iam_role.arn
-}
-
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
   for_each    = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
   name        = "${var.lambda_project_name}_${each.key}"
