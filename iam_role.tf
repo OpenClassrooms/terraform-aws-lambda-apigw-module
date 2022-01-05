@@ -1,6 +1,6 @@
 resource "aws_iam_role" "lambda_iam_role" {
   for_each           = toset(var.api_gateway_stages)
-  name               = "${each.key}_${var.lambda_project_name}"
+  name               = substr("${each.key}_${var.lambda_project_name}", 0, 64)
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -24,7 +24,8 @@ EOF
 
 
 resource "aws_iam_role" "cloudwatch" {
-  name = "apigw_cw_${var.lambda_project_name}"
+  for_each = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
+  name     = substr("${each.key}_apigw_cw_${var.lambda_project_name}", 0, 64)
 
   assume_role_policy = <<EOF
 {

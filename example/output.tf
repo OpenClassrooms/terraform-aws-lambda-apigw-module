@@ -7,5 +7,5 @@ output "api_urls_curls" {
 
 output "api_keys_paths" {
   description = "api keys path on SSM/ParameterStore"
-  value = module.my_example_module.api_keys_paths
+  value       = module.my_example_module.api_keys_paths
 }

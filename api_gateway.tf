@@ -1,5 +1,6 @@
 resource "aws_api_gateway_account" "api-gw-account" {
-  cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
+  for_each            = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
+  cloudwatch_role_arn = aws_iam_role.cloudwatch[each.key].arn
 }
 
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
@@ -64,6 +65,10 @@ resource "aws_api_gateway_stage" "api_gw_stage" {
     format          = var.apigw_cloudwatch_logs_format
   }
   depends_on = [aws_cloudwatch_log_group.api_gateway_aws_cloudwatch_log_group]
+  tags = merge({
+    module           = "apigw_lambda",
+    lambda_code_repo = var.lambda_code_repo
+  }, var.tags, var.default_tags)
 }
 
 
