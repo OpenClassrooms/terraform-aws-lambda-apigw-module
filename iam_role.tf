@@ -24,7 +24,7 @@ EOF
 
 
 resource "aws_iam_role" "cloudwatch" {
-  name = "api_gateway_cloudwatch_global_${var.lambda_project_name}"
+  name = "apigw_cw_${var.lambda_project_name}"
 
   assume_role_policy = <<EOF
 {
