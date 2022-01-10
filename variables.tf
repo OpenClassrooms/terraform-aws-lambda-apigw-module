@@ -97,3 +97,14 @@ variable "store_api_keys_in_ssm" {
   type        = bool
   default     = false
 }
+
+variable "send_logs_to_newrelic" {
+  description = "Do you want your lambda function logs to be sent to a newrelic ingestion lambda function? See: https://docs.newrelic.com/docs/logs/forward-logs/aws-lambda-sending-cloudwatch-logs/"
+  type        = bool
+  default     = false
+}
+
+variable "newrelic_log_ingestion_function_arn" {
+  description = "The arn of the Newrelic Lambda function that ingest logs (if send_logs_to_newrelic is enabled)"
+  default     = "not_defined"
+}

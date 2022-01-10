@@ -137,5 +137,7 @@ module "my_example_module" {
   api_gateway_path                      = "mypath"
   api_gateway_stages                    = ["production", "staging"]
   api_gateway_cloudwatch_logs_retention = 7
+  send_logs_to_newrelic                 = true
+  newrelic_log_ingestion_function_arn   = "xxx"
   tags                                  = var.tags
 }
