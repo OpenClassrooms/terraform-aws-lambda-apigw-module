@@ -73,7 +73,7 @@ resource "aws_lambda_permission" "apigw-lambda-permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function[each.key].function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn = "${aws_api_gateway_rest_api.api_gw_rest_api[each.key].execution_arn}/*/*/*"
+  source_arn = "${aws_api_gateway_rest_api.api_gw_rest_api[each.key].execution_arn}/*/*"
 }
 
 resource "aws_api_gateway_api_key" "api_key" {
