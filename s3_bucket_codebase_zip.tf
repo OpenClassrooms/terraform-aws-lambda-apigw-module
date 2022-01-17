@@ -5,4 +5,7 @@ resource "aws_s3_bucket_object" "code_base_package" {
   source = "hello.zip"
   # switch to this source for local module testing (path are different if we are in local or remote)
   #source = "../hello.zip"
+  lifecycle {
+    ignore_changes = all
+  }
 }
