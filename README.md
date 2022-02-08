@@ -8,7 +8,7 @@ Terraform module which provision API Gateway.
 
 ```hcl
 module "my_example_module" {
-  source                           = "OpenClassrooms/lambda-apigw-module/aws"
+  source                           = "../" # in this example, this is a local module. For real use, source will be "OpenClassrooms/lambda-apigw-module/aws"
   lambda_project_name              = "test"
   lambda_script_name               = "main"
   lambda_handler                   = "main"
@@ -26,12 +26,16 @@ module "my_example_module" {
   }
   use_api_gateway                       = true
   use_api_gateway_api_key               = true
+  store_api_keys_in_ssm                 = true
   api_gateway_domain_name_mapping       = var.apigw_domain_name_mapping
   api_gateway_path                      = "mypath"
   api_gateway_stages                    = ["production", "staging"]
   api_gateway_cloudwatch_logs_retention = 7
+  send_logs_to_newrelic                 = true
+  newrelic_log_ingestion_function_arn   = "xxx"
+  scheduling_enabled                    = true
+  schedule_expression                   = "cron(*/10 * * * ? *)" # Every 10 minutes
   tags                                  = var.tags
-}
 
 ```
 

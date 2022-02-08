@@ -108,3 +108,14 @@ variable "newrelic_log_ingestion_function_arn" {
   description = "The arn of the Newrelic Lambda function that ingest logs (if send_logs_to_newrelic is enabled)"
   default     = "not_defined"
 }
+
+variable "scheduling_enabled" {
+  description = "Do you want your lambda function to be launched periodically?"
+  type        = bool
+  default     = false
+}
+
+variable "schedule_expression" {
+  description = "The cron expression if you have planned to schedule your lambdas. See: https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html"
+  default     = "not_defined"
+}
