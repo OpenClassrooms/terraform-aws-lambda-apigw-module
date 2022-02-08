@@ -139,5 +139,7 @@ module "my_example_module" {
   api_gateway_cloudwatch_logs_retention = 7
   send_logs_to_newrelic                 = true
   newrelic_log_ingestion_function_arn   = "xxx"
+  scheduling_enabled                    = true
+  schedule_expression                   = "cron(*/10 * * * ? *)" # Every 10 minutes
   tags                                  = var.tags
 }
