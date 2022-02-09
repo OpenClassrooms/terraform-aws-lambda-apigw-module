@@ -1,9 +1,25 @@
 # The scheduling part
+
+locals {
+  full_scheduling_config = var.scheduling_enabled == true ? flatten([
+    for stage in var.api_gateway_stages : [
+      for ck, c in var.scheduling_config : {
+        stage      = stage
+        rule_name  = ck
+        expression = c.scheduling_expression
+        input      = c.input
+      }
+    ]
+  ]) : []
+}
+
 resource "aws_cloudwatch_event_rule" "cloudwatch_event_rule" {
-  for_each            = var.scheduling_enabled == true ? toset(var.api_gateway_stages) : []
-  name                = "${var.lambda_project_name}_${each.key}_cw_ev_rule"
-  description         = "${var.lambda_project_name}_${each.key} cloudwatch event rule"
-  schedule_expression = var.schedule_expression
+  for_each = {
+    for scheduling_config in local.full_scheduling_config : "${var.lambda_project_name}_${scheduling_config.rule_name}_${scheduling_config.stage}" => scheduling_config
+  }
+  name                = "${each.key}_cw_ev_rule"
+  description         = "${each.key} cloudwatch event rule"
+  schedule_expression = each.value.expression
   is_enabled          = var.scheduling_enabled
   tags = merge({
     module           = "apigw_lambda",
@@ -13,16 +29,21 @@ resource "aws_cloudwatch_event_rule" "cloudwatch_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "cloudwatch_event_target" {
-  for_each  = var.scheduling_enabled == true ? toset(var.api_gateway_stages) : []
+  for_each = {
+    for scheduling_config in local.full_scheduling_config : "${var.lambda_project_name}_${scheduling_config.rule_name}_${scheduling_config.stage}" => scheduling_config
+  }
   rule      = aws_cloudwatch_event_rule.cloudwatch_event_rule[each.key].name
-  target_id = "${var.lambda_project_name}_${each.key}"
-  arn       = aws_lambda_function.lambda_function[each.key].arn
+  target_id = each.key
+  arn       = aws_lambda_function.lambda_function[each.value.stage].arn
+  input     = jsonencode(each.value.input)
 }
 
 resource "aws_lambda_permission" "permission_allow_cloudwatch_to_call_llambda" {
-  for_each      = var.scheduling_enabled == true ? toset(var.api_gateway_stages) : []
+  for_each = {
+    for scheduling_config in local.full_scheduling_config : "${var.lambda_project_name}_${scheduling_config.rule_name}_${scheduling_config.stage}" => scheduling_config
+  }
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_function[each.key].function_name
+  function_name = aws_lambda_function.lambda_function[each.value.stage].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.cloudwatch_event_rule[each.key].arn
 }

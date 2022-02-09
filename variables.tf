@@ -115,7 +115,8 @@ variable "scheduling_enabled" {
   default     = false
 }
 
-variable "schedule_expression" {
-  description = "The cron expression if you have planned to schedule your lambdas. See: https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html"
-  default     = "not_defined"
+variable "scheduling_config" {
+  description = "The scheduling configuration. Must contain scheduling_expression and input to send to the lambda. See example/main.tf for example implementation"
+  default     = {}
+  type        = map(any)
 }
