@@ -34,8 +34,18 @@ module "my_example_module" {
   send_logs_to_newrelic                 = true
   newrelic_log_ingestion_function_arn   = "xxx"
   scheduling_enabled                    = true
-  schedule_expression                   = "cron(*/10 * * * ? *)" # Every 10 minutes
-  tags                                  = var.tags
+  scheduling_config = {
+    "every_ten_minutes" = {
+      scheduling_expression = "cron(*/10 * * * ? *)",
+      input                 = "{\"foo\":{\"bar\": [1,2]}}"
+    }
+    "every_ten_minutes_plus_one" = {
+      scheduling_expression = "cron(1/10 * * * ? *)",
+      input                 = "{\"foo2\":{\"bar2\": [3,4]}}"
+    }
+  }
+  tags = var.tags
+}
 
 ```
 
