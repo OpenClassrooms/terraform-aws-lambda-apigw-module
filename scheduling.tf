@@ -17,7 +17,7 @@ resource "aws_cloudwatch_event_rule" "cloudwatch_event_rule" {
   for_each = {
     for scheduling_config in local.full_scheduling_config : "${var.lambda_project_name}_${scheduling_config.rule_name}_${scheduling_config.stage}" => scheduling_config
   }
-  name                = "${each.key}_cw_ev_rule"
+  name                = "${each.key}"
   description         = "${each.key} cloudwatch event rule"
   schedule_expression = each.value.expression
   is_enabled          = var.scheduling_enabled
