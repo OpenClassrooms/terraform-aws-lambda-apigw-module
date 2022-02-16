@@ -35,7 +35,7 @@ resource "aws_cloudwatch_event_target" "cloudwatch_event_target" {
   rule      = aws_cloudwatch_event_rule.cloudwatch_event_rule[each.key].name
   target_id = each.key
   arn       = aws_lambda_function.lambda_function[each.value.stage].arn
-  input     = jsonencode(each.value.input)
+  input     = "{\"body\": ${jsonencode(each.value.input)}}"
 }
 
 resource "aws_lambda_permission" "permission_allow_cloudwatch_to_call_llambda" {
