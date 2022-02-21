@@ -23,6 +23,6 @@ resource "aws_lambda_function" "lambda_function" {
   ]
 
   lifecycle {
-    ignore_changes = [last_modified]
+    ignore_changes = [last_modified, source_code_hash, source_code_size, version, qualified_arn]
   }
 }
