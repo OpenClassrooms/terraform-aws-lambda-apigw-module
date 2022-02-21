@@ -6,18 +6,30 @@ variable "default_tags" {
     module_github_repo = "https://github.com/OpenClassrooms/terraform-aws-lambda-apigw-module"
   }
 }
+
 variable "lambda_project_name" {
   description = "The name of the lambda project"
+  default     = "hello"
 }
+
 variable "lambda_script_name" {
   description = "The name of the main function invoked (the name of the script actually)"
 }
+
 variable "lambda_handler" {
   description = "The function to call in the main script name (usually: main)"
 }
+
 variable "lambda_runtime" {
   description = "Runtime to execute on lambda"
+  default     = "python3.8"
 }
+
+variable "lambda_codebase_bucket_s3_key" {
+  description = "The path of the scripts zip"
+  default     = "hello.zip"
+}
+
 variable "lambda_code_repo" {
   description = "The name of the repository where is stored the lambda code"
 }
