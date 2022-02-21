@@ -19,7 +19,7 @@ resource "aws_lambda_function" "lambda_function" {
   }
 
   depends_on = [
-    aws_s3_bucket_object.code_base_package
+    aws_s3_object.code_base_package
   ]
 
   lifecycle {
