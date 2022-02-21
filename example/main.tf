@@ -1,9 +1,13 @@
 # Prerequisite before using the module
 resource "aws_s3_bucket" "my-lambda-codebase-bucket" {
   bucket = "my-test-lambda-codebase-bucket"
-  acl    = "private"
 
   tags = var.tags
+}
+
+resource "aws_s3_bucket_acl" "my-lambda-codebase-bucket-acl" {
+  bucket = aws_s3_bucket.my-lambda-codebase-bucket.id
+  acl    = "private"
 }
 
 # we need a unique api-gateway account to allow api gateway to send logs in cloudwatch

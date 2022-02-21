@@ -5,7 +5,7 @@ resource "aws_lambda_function" "lambda_function" {
   handler       = "${var.lambda_script_name}.${var.lambda_handler}"
   runtime       = var.lambda_runtime
   s3_bucket     = var.lambda_codebase_bucket
-  s3_key        = "${var.lambda_project_name}.zip"
+  s3_key        = var.lambda_codebase_bucket_s3_key
   memory_size   = var.lambda_memory_size
   timeout       = var.lambda_timeout
   tags = merge({
