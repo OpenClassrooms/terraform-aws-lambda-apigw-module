@@ -20,6 +20,14 @@ variable "apigw_domain_name_mapping" {
   }
 }
 
+variable "single_apigw_domain_name_mapping" {
+  description = "The custom domain name mapping you want your API Gateway respond to"
+  type        = map(string)
+  default = {
+    no_stage    = "apigw-staging.mydomain.com"
+  }
+}
+
 variable "cloudflare_zone_id" {
   description = "Zone ID in cloudflare to apply the DNS records to. This variable should be defined as an env var like 'export TF_VAR_cloudflare_zone_id=\"xxx\"'"
   type        = string

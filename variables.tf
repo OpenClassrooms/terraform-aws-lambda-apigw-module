@@ -63,7 +63,7 @@ variable "tags" {
 variable "environment_variables" {
   description = "Environment variables for lambda function"
   default     = {}
-  type        = map(any)
+  type        = any
 }
 
 variable "use_api_gateway" {
@@ -92,7 +92,7 @@ variable "use_api_gateway_api_key" {
 variable "api_gateway_stages" {
   description = "The API Gateway stage names"
   type        = list(string)
-  default     = ["production"]
+  default     = ["no_stage"]
 }
 
 variable "lambda_codebase_bucket" {

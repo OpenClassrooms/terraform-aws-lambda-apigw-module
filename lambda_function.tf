@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "lambda_function" {
   for_each      = toset(var.api_gateway_stages)
-  function_name = "${var.lambda_project_name}_${each.key}"
+  function_name = each.key == "no_stage" ? var.lambda_project_name: "${var.lambda_project_name}_${each.key}"
   role          = aws_iam_role.lambda_iam_role.arn
   handler       = "${var.lambda_script_name}.${var.lambda_handler}"
   runtime       = var.lambda_runtime
@@ -15,7 +15,7 @@ resource "aws_lambda_function" "lambda_function" {
   }, var.tags, var.default_tags)
 
   environment {
-    variables = var.environment_variables[each.key]
+     variables = var.environment_variables[each.key]
   }
 
   depends_on = [
