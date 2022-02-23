@@ -159,35 +159,35 @@ module "my_example_module" {
 
 # a second example with lambda only and environment agnostic
 module "my_second_example_module" {
-  source                           = "../" # in this example, this is a local module. For real use, source will be "OpenClassrooms/lambda-apigw-module/aws"
-  lambda_project_name              = "second_test"
-  lambda_script_name               = "main"
-  lambda_handler                   = "main"
-  lambda_runtime                   = "python3.8"
-  lambda_code_repo                 = "https://github.com/xxx/mysecondrepo"
-  lambda_codebase_bucket           = aws_s3_bucket.my-lambda-codebase-bucket.bucket
+  source                 = "../" # in this example, this is a local module. For real use, source will be "OpenClassrooms/lambda-apigw-module/aws"
+  lambda_project_name    = "second_test"
+  lambda_script_name     = "main"
+  lambda_handler         = "main"
+  lambda_runtime         = "python3.8"
+  lambda_code_repo       = "https://github.com/xxx/mysecondrepo"
+  lambda_codebase_bucket = aws_s3_bucket.my-lambda-codebase-bucket.bucket
   environment_variables = {
     "no_stage" = {
-       MY_SECOND_GREAT_VARIABLE = "test"
+      MY_SECOND_GREAT_VARIABLE = "test"
     }
   }
 }
 
 # a third example with environment agnostic
 module "my_third_example_module" {
-  source                           = "../" # in this example, this is a local module. For real use, source will be "OpenClassrooms/lambda-apigw-module/aws"
-  lambda_project_name              = "second_test"
-  lambda_script_name               = "main"
-  lambda_handler                   = "main"
-  lambda_runtime                   = "python3.8"
-  lambda_code_repo                 = "https://github.com/xxx/mysecondrepo"
-  lambda_codebase_bucket           = aws_s3_bucket.my-lambda-codebase-bucket.bucket
+  source                 = "../" # in this example, this is a local module. For real use, source will be "OpenClassrooms/lambda-apigw-module/aws"
+  lambda_project_name    = "second_test"
+  lambda_script_name     = "main"
+  lambda_handler         = "main"
+  lambda_runtime         = "python3.8"
+  lambda_code_repo       = "https://github.com/xxx/mysecondrepo"
+  lambda_codebase_bucket = aws_s3_bucket.my-lambda-codebase-bucket.bucket
   environment_variables = {
     "no_stage" = {
-       MY_THIRD_GREAT_VARIABLE = "test3"
+      MY_THIRD_GREAT_VARIABLE = "test3"
     }
   }
-  use_api_gateway                       = true
-  api_gateway_domain_name_mapping       = var.single_apigw_domain_name_mapping
-  api_gateway_path                      = "mypath3"
+  use_api_gateway                 = true
+  api_gateway_domain_name_mapping = var.single_apigw_domain_name_mapping
+  api_gateway_path                = "mypath3"
 }

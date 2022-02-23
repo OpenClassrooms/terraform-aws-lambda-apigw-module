@@ -24,7 +24,7 @@ variable "single_apigw_domain_name_mapping" {
   description = "The custom domain name mapping you want your API Gateway respond to"
   type        = map(string)
   default = {
-    no_stage    = "apigw-staging.mydomain.com"
+    no_stage = "apigw-staging.mydomain.com"
   }
 }
 
