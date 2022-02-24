@@ -190,4 +190,6 @@ module "my_third_example_module" {
   use_api_gateway                 = true
   api_gateway_domain_name_mapping = var.single_apigw_domain_name_mapping
   api_gateway_path                = "mypath3"
+  subnet_ids                      = ["sub-1234", "sub-5678"]
+  security_group_ids              = ["sg-1234"]
 }
