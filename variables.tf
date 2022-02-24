@@ -132,3 +132,15 @@ variable "scheduling_config" {
   default     = {}
   type        = map(any)
 }
+
+variable "subnet_ids" {
+  description = "The subnet ids you want your lambda to run on"
+  type        = list(string)
+  default     = []
+}
+
+variable "security_group_ids" {
+  description = "The sg ids you want your lambda to run with"
+  type        = list(string)
+  default     = []
+}

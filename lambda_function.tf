@@ -14,6 +14,11 @@ resource "aws_lambda_function" "lambda_function" {
     env              = each.key
   }, var.tags, var.default_tags)
 
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = var.security_group_ids
+  }
+
   environment {
     variables = var.environment_variables[each.key]
   }
