@@ -1,3 +1,4 @@
+
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
   for_each    = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
   name        = "${var.lambda_project_name}_${each.key}"
@@ -24,9 +25,13 @@ resource "aws_api_gateway_method" "proxy" {
   for_each         = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
   rest_api_id      = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
   resource_id      = aws_api_gateway_rest_api.api_gw_rest_api[each.key].root_resource_id
-  http_method      = "ANY"
-  authorization    = "NONE"
+  http_method      = var.api_gateway_http_method
+  authorization    = var.api_gateway_authorization
+  authorizer_id    = aws_api_gateway_authorizer.custom_authorizer[each.key].id
   api_key_required = var.use_api_gateway_api_key
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "lambda_integration" {
@@ -44,10 +49,16 @@ resource "aws_api_gateway_integration" "lambda_integration" {
 resource "aws_api_gateway_deployment" "api_gw_deployment" {
   for_each = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
   depends_on = [
-    aws_api_gateway_integration.lambda_integration
+    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_method.proxy
   ]
 
   rest_api_id = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
 
 resource "aws_api_gateway_stage" "api_gw_stage" {
