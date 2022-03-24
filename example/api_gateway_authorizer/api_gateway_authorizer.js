@@ -9,6 +9,8 @@ AWS.config.update({
 
 exports.lambdaHandler = async function (event, context, callback) {
 
+  // console.log('Received event:', JSON.stringify(event, null, 2));
+
   let api_stage = process.env.ENV
 
   var token_authorization = event.headers['Authorization']

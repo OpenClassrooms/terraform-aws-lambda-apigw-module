@@ -48,7 +48,7 @@ resource "aws_api_gateway_authorizer" "custom_authorizer" {
   authorizer_uri         = aws_lambda_function.lambda_function_custom_authorizer[each.key].invoke_arn
   authorizer_credentials = aws_iam_role.invocation_role_custom_authorizer[0].arn
   type                   = "REQUEST"
-  identity_source        = "method.request.header.authorization"
+  identity_source        = "method.request.header.Authorization"
   // identity_source        = "method.request.header.authorizationToken,method.request.querystring.API_KEY"
   // authorizer_credentials = var.api_gateway_authorizer_credentials
 }
@@ -71,7 +71,15 @@ resource "aws_iam_role" "invocation_role_custom_authorizer" {
         "Service": "apigateway.amazonaws.com"
       },
       "Effect": "Allow",
-      "Sid": ""
+      "Sid": "ApiGWCustomAuthAPIGW"
+    },
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": "ApiGWCustomAuthLambda"
     }
   ]
 }
@@ -182,11 +190,6 @@ resource "aws_iam_role_policy" "lambda_iam_role_policy_ssm" {
         ],
       "Effect": "Allow",
       "Resource": "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/vault/aws/apigateway_authorizer/*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": "ssm:DescribeParameters",
-      "Resource": "*"
     }
   ]
 }

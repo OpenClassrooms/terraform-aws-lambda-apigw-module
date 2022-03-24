@@ -61,7 +61,7 @@ variable "api_gateway_http_method" {
 
 variable "api_gateway_authorization" {
   description = "The type of authorization used for the method"
-  default     = "None"
+  default     = "NONE"
 }
 
 variable "api_gateway_authorizer_credentials" {
@@ -69,10 +69,6 @@ variable "api_gateway_authorizer_credentials" {
   default     = ""
 }
 
-// variable "api_gateway_authorizer" {
-//   description = "The authorizer id to be used when the authorization is CUSTOM"
-//   default     = ""
-// }
 variable "lambda_custom_authorizer_name" {
   description = "The authorizer id to be used when the authorization is CUSTOM"
   default     = ""
