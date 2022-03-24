@@ -54,6 +54,44 @@ variable "api_gateway_cloudwatch_logs_retention" {
   default     = 14
 }
 
+variable "api_gateway_http_method" {
+  description = "The type of authorization used for the method"
+  default     = "ANY"
+}
+
+variable "api_gateway_authorization" {
+  description = "The type of authorization used for the method"
+  default     = "NONE"
+}
+
+variable "api_gateway_authorizer_credentials" {
+  description = "The authorizer id to be used when the authorization is CUSTOM"
+  default     = ""
+}
+
+variable "lambda_custom_authorizer_name" {
+  description = "The authorizer id to be used when the authorization is CUSTOM"
+  default     = ""
+}
+variable "lambda_custom_authorizer_script_name" {
+  description = "The authorizer id to be used when the authorization is CUSTOM"
+  default     = ""
+}
+variable "lambda_custom_authorizer_handler" {
+  description = "The authorizer id to be used when the authorization is CUSTOM"
+  default     = ""
+}
+
+variable "aws_account_id" {
+  description = "The AWS Account ID"
+  default     = ""
+}
+
+variable "aws_region" {
+  description = "The AWS region to create the infrastructure in"
+  default     = "eu-west-3"
+}
+
 variable "tags" {
   description = "The tags to apply"
   type        = map(string)
