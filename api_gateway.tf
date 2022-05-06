@@ -1,9 +1,9 @@
 locals {
   api_gateway_stages                    = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
-  api_gateway_stages_with_key           = var.use_api_gateway == true && var.use_api_gateway_api_key == true ? toset(var.api_gateway_stages) : []
-  api_gateway_default_authorizer_stages = var.use_api_gateway == true && var.api_gateway_authorization == "CUSTOM" ? [] : toset(var.api_gateway_stages)
-  api_gateway_custom_authorizer_stages  = var.use_api_gateway == true && var.api_gateway_authorization == "CUSTOM" ? toset(var.api_gateway_stages) : []
-  aws_api_gateway_method_proxy          = var.use_api_gateway == true && var.api_gateway_authorization == "CUSTOM" ? aws_api_gateway_method.proxy_custom_authorizer : aws_api_gateway_method.proxy
+  api_gateway_stages_with_key           = var.use_api_gateway_api_key == true ? local.api_gateway_stages : []
+  api_gateway_default_authorizer_stages = var.api_gateway_authorization == "CUSTOM" ? [] : local.api_gateway_stages
+  api_gateway_custom_authorizer_stages  = var.api_gateway_authorization == "CUSTOM" ? local.api_gateway_stages : []
+  aws_api_gateway_method_proxy          = var.api_gateway_authorization == "CUSTOM" ? aws_api_gateway_method.proxy_custom_authorizer : aws_api_gateway_method.proxy
 }
 
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
