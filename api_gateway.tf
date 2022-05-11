@@ -86,6 +86,15 @@ resource "aws_api_gateway_deployment" "api_gw_deployment" {
   lifecycle {
     create_before_destroy = true
   }
+  
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_rest_api.api_gw_rest_api[each.key].id,
+      var.api_gateway_authorization,
+      var.api_gateway_http_method,
+      aws_api_gateway_integration.lambda_integration[each.key].id,
+    ]))
+  }
 
 }
 
