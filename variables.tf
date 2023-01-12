@@ -182,3 +182,16 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "sqs_enabled" {
+  description = "Do you want your lambda function to be triggered by SQS message"
+  type        = bool
+  default     = false
+}
+
+variable "sqs_queues_arn" {
+  description = "The SQS queues arn"
+  type        = list(string)
+  default     = []
+}
+
