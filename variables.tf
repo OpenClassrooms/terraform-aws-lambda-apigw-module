@@ -195,3 +195,9 @@ variable "sqs_queues_arn" {
   default     = []
 }
 
+variable "lambda_policy" {
+  description = "the additional policy for the lambda"
+  type        = string
+  default     = ""
+}
+
