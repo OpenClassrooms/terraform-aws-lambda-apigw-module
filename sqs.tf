@@ -1,6 +1,6 @@
 # The sqs part
 resource "aws_lambda_event_source_mapping" "sqs_aws_lambda_event_source_mapping" {
-  count            = var.sqs_enabled ? 1 : 0
+  for_each         = var.sqs_queues_arn
   event_source_arn = each.value
   function_name    = var.lambda_project_name
 }
