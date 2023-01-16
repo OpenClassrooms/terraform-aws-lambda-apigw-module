@@ -7,7 +7,7 @@ locals {
         stage      = stage
         rule_name  = ck
         expression = c.scheduling_expression
-        input      = c.input
+        input      = try(c.input, "")
       }
     ]
   ]) : []
