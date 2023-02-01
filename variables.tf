@@ -195,3 +195,8 @@ variable "lambda_policy" {
   default     = ""
 }
 
+variable "lambda_policy_enabled" {
+  description = "Do you want your lambda function have a policy"
+  type        = bool
+  default     = false
+}
