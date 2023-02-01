@@ -1,8 +1,6 @@
 variable "default_tags" {
   type = map(string)
   default = {
-    deployed_by        = "terraform"
-    stack              = "infra"
     module_github_repo = "https://github.com/OpenClassrooms/terraform-aws-lambda-apigw-module"
   }
 }
