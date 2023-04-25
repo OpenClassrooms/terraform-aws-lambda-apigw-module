@@ -125,6 +125,12 @@ variable "use_api_gateway_api_key" {
   default     = false
 }
 
+variable "api_gateway_api_key_list" {
+  description = "The api keys list (for more than one client)"
+  type        = list(string)
+  default     = []
+}
+
 variable "api_gateway_stages" {
   description = "The API Gateway stage names"
   type        = list(string)
@@ -197,4 +203,28 @@ variable "lambda_policy_enabled" {
   description = "Do you want your lambda function have a policy"
   type        = bool
   default     = false
+}
+
+variable "lambda_additional_perms_enabled" {
+  description = "Do you want to add additional permissions to your lambda function ?"
+  type        = bool
+  default     = false
+}
+
+variable "lambda_additional_perms" {
+  description = "Additional permissions to your lambda function"
+  type        = string
+  default     = ""
+}
+
+variable "api_gateway_validation_schema_enabled" {
+  description = "Do you a validation schema for your api?"
+  type        = bool
+  default     = false
+}
+
+variable "api_gateway_validation_schema" {
+  description = "Validation schema for the api gateway"
+  type        = string
+  default     = ""
 }

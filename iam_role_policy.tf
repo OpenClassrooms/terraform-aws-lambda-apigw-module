@@ -48,3 +48,10 @@ resource "aws_iam_role_policy" "lambda_iam_role_policy_allow_ec2_actions" {
 }
 EOF
 }
+
+resource "aws_iam_role_policy" "lambda_iam_role_additional_permissions" {
+  count  = var.lambda_additional_perms_enabled ? 1 : 0
+  name   = "lambda_additional_perm_${var.lambda_project_name}"
+  role   = aws_iam_role.lambda_iam_role.name
+  policy = var.lambda_additional_perms
+}
