@@ -1,9 +1,29 @@
 locals {
   api_gateway_stages                    = var.use_api_gateway == true ? toset(var.api_gateway_stages) : []
-  api_gateway_stages_with_key           = var.use_api_gateway_api_key == true ? local.api_gateway_stages : []
+  api_gateway_stages_with_schema        = var.api_gateway_validation_schema_enabled == true ? local.api_gateway_stages : []
   api_gateway_default_authorizer_stages = var.api_gateway_authorization == "CUSTOM" ? [] : local.api_gateway_stages
   api_gateway_custom_authorizer_stages  = var.api_gateway_authorization == "CUSTOM" ? local.api_gateway_stages : []
   aws_api_gateway_method_proxy          = var.api_gateway_authorization == "CUSTOM" ? aws_api_gateway_method.proxy_custom_authorizer : aws_api_gateway_method.proxy
+
+  api_gateway_keys = var.use_api_gateway_api_key == true ? (length(var.api_gateway_api_key_list) == 0 ? flatten([
+    for stage in local.api_gateway_stages : {
+      stage    = "${stage}"
+      key_name = "${stage}"
+    }
+    ]) : flatten([
+    for key in var.api_gateway_api_key_list : [
+      for stage in local.api_gateway_stages : {
+        stage    = "${stage}"
+        key_name = "${key}_${stage}"
+      }
+    ]])
+  ) : []
+
+
+  api_gateway_keys_map = {
+    for item in local.api_gateway_keys : item.key_name => item
+  }
+
 }
 
 resource "aws_api_gateway_rest_api" "api_gw_rest_api" {
@@ -86,7 +106,7 @@ resource "aws_api_gateway_deployment" "api_gw_deployment" {
   lifecycle {
     create_before_destroy = true
   }
-  
+
   triggers = {
     redeployment = sha1(jsonencode([
       aws_api_gateway_rest_api.api_gw_rest_api[each.key].id,
@@ -118,9 +138,7 @@ resource "aws_api_gateway_stage" "api_gw_stage" {
 
 
 resource "aws_lambda_permission" "apigw-lambda-permission" {
-
-  for_each = local.api_gateway_stages
-
+  for_each      = local.api_gateway_stages
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_function[each.key].function_name
@@ -129,8 +147,8 @@ resource "aws_lambda_permission" "apigw-lambda-permission" {
 }
 
 resource "aws_api_gateway_api_key" "api_key" {
-  for_each = local.api_gateway_stages_with_key
-  name     = "${var.lambda_project_name}_${each.key}_api_key"
+  for_each = local.api_gateway_keys_map
+  name     = "${var.lambda_project_name}_${each.value.key_name}_api_key"
   tags = merge({
     module           = "apigw_lambda",
     lambda_code_repo = var.lambda_code_repo
@@ -138,16 +156,12 @@ resource "aws_api_gateway_api_key" "api_key" {
 }
 
 resource "aws_api_gateway_usage_plan" "api_usage_plan" {
-
-  for_each = local.api_gateway_stages_with_key
-
-  name = "api_usage_plan_${var.lambda_project_name}_${each.key}"
-
+  for_each = local.api_gateway_keys_map
+  name     = "api_usage_plan_${var.lambda_project_name}_${each.value.key_name}"
   api_stages {
-    api_id = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
-    stage  = each.key
+    api_id = aws_api_gateway_rest_api.api_gw_rest_api[each.value.stage].id
+    stage  = each.value.stage
   }
-
   depends_on = [
     aws_api_gateway_deployment.api_gw_deployment,
     aws_api_gateway_stage.api_gw_stage
@@ -159,10 +173,18 @@ resource "aws_api_gateway_usage_plan" "api_usage_plan" {
 }
 
 resource "aws_api_gateway_usage_plan_key" "api_usage_plan_key" {
-
-  for_each = local.api_gateway_stages_with_key
-
-  key_id        = aws_api_gateway_api_key.api_key[each.key].id
+  for_each      = local.api_gateway_keys_map
+  key_id        = aws_api_gateway_api_key.api_key[each.value.key_name].id
   key_type      = "API_KEY"
-  usage_plan_id = aws_api_gateway_usage_plan.api_usage_plan[each.key].id
+  usage_plan_id = aws_api_gateway_usage_plan.api_usage_plan[each.value.key_name].id
+}
+
+resource "aws_api_gateway_model" "api_gw_model" {
+  for_each     = local.api_gateway_stages_with_schema
+  rest_api_id  = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
+  name         = "api_gw_schema_validation"
+  description  = "JSON schema for validation"
+  content_type = "application/json"
+
+  schema = var.api_gateway_validation_schema
 }
