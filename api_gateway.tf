@@ -182,7 +182,7 @@ resource "aws_api_gateway_usage_plan_key" "api_usage_plan_key" {
 resource "aws_api_gateway_model" "api_gw_model" {
   for_each     = local.api_gateway_stages_with_schema
   rest_api_id  = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
-  name         = "api_gw_schema_validation"
+  name         = "${var.lambda_project_name}SchemaValidation"
   description  = "JSON schema for validation"
   content_type = "application/json"
 
