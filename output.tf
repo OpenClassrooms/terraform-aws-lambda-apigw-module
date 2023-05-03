@@ -9,3 +9,10 @@ output "api_keys_paths" {
     for k, v in aws_ssm_parameter.api_key : k => v.name
   })
 }
+
+output "lambda_function_arn_list" {
+  description = "The arn of the lambda function"
+  value = tomap({
+    for k, v in aws_lambda_function.lambda_function : k => v.arn
+  })
+}
