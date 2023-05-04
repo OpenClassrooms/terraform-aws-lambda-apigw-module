@@ -152,6 +152,12 @@ variable "store_api_keys_in_ssm" {
   default     = false
 }
 
+variable "api_keys_prefix_in_ssm" {
+  description = "Set this variable override SSM api keys path in SSM/ParameterStore"
+  type        = string
+  default     = "/vault/aws/apigateway"
+}
+
 variable "send_logs_to_newrelic" {
   description = "Do you want your lambda function logs to be sent to a newrelic ingestion lambda function? See: https://docs.newrelic.com/docs/logs/forward-logs/aws-lambda-sending-cloudwatch-logs/"
   type        = bool
