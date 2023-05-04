@@ -3,6 +3,13 @@ output "api_path" {
   value       = var.api_gateway_path
 }
 
+output "api_keys" {
+  description = "api keys map"
+  value = tomap({
+    for k, v in aws_api_gateway_api_key.api_key : k => v.value
+  })
+}
+
 output "api_keys_paths" {
   description = "api keys path on SSM/ParameterStore"
   value = tomap({
