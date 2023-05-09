@@ -65,6 +65,8 @@ resource "aws_api_gateway_method" "proxy" {
   request_models = var.api_gateway_validation_schema_enabled ? {
     "${var.api_gateway_validation_schema_content_type}" = aws_api_gateway_model.api_gw_model[each.key].name
   } : {}
+
+  request_validator_id = var.api_gateway_validation_schema_enabled ? aws_api_gateway_request_validator.api_gw_schema_validator[each.key].id : null
 }
 
 resource "aws_api_gateway_method" "proxy_custom_authorizer" {
@@ -190,4 +192,11 @@ resource "aws_api_gateway_model" "api_gw_model" {
   content_type = var.api_gateway_validation_schema_content_type
 
   schema = var.api_gateway_validation_schema
+}
+
+resource "aws_api_gateway_request_validator" "api_gw_schema_validator" {
+  for_each              = local.api_gateway_stages_with_schema
+  name                  = "${var.lambda_project_name}BodyValidator"
+  rest_api_id           = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
+  validate_request_body = true
 }
