@@ -229,6 +229,12 @@ variable "api_gateway_validation_schema_enabled" {
   default     = false
 }
 
+variable "api_gateway_validation_schema_content_type" {
+  description = "Validation schema content type for the api gateway"
+  type        = string
+  default     = "application/json"
+}
+
 variable "api_gateway_validation_schema" {
   description = "Validation schema for the api gateway"
   type        = string

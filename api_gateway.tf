@@ -62,6 +62,9 @@ resource "aws_api_gateway_method" "proxy" {
   request_parameters = {
     "method.request.path.proxy" = true
   }
+  request_models = var.api_gateway_validation_schema_enabled ? {
+    "${var.api_gateway_validation_schema_content_type}" = "${var.lambda_project_name}SchemaValidation"
+  } : {}
 }
 
 resource "aws_api_gateway_method" "proxy_custom_authorizer" {
@@ -184,7 +187,7 @@ resource "aws_api_gateway_model" "api_gw_model" {
   rest_api_id  = aws_api_gateway_rest_api.api_gw_rest_api[each.key].id
   name         = "${var.lambda_project_name}SchemaValidation"
   description  = "JSON schema for validation"
-  content_type = "application/json"
+  content_type = var.api_gateway_validation_schema_content_type
 
   schema = var.api_gateway_validation_schema
 }
