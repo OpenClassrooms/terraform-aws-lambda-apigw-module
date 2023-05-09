@@ -63,7 +63,7 @@ resource "aws_api_gateway_method" "proxy" {
     "method.request.path.proxy" = true
   }
   request_models = var.api_gateway_validation_schema_enabled ? {
-    "${var.api_gateway_validation_schema_content_type}" = "${var.lambda_project_name}SchemaValidation"
+    "${var.api_gateway_validation_schema_content_type}" = aws_api_gateway_model.api_gw_model[each.key].name
   } : {}
 }
 
