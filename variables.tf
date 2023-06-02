@@ -42,6 +42,11 @@ variable "lambda_timeout" {
   default     = 30
 }
 
+variable "lambda_reserved_concurrent_executions" {
+  description = "Max lambda concurrency. If set to -1, concurrency remains as default (1000)"
+  default     = -1
+}
+
 variable "lambda_cloudwatch_logs_retention" {
   description = "The time in days retention for lambda logs"
   default     = 7
