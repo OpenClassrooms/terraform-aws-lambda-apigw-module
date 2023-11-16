@@ -118,6 +118,8 @@ resource "aws_api_gateway_deployment" "api_gw_deployment" {
       var.api_gateway_authorization,
       var.api_gateway_http_method,
       aws_api_gateway_integration.lambda_integration[each.key].id,
+      aws_api_gateway_method[each.key]request_models,
+      aws_api_gateway_method[each.key].proxyrequest_validator_id,
     ]))
   }
 
