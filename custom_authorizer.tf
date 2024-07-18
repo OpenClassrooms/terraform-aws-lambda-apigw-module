@@ -35,7 +35,7 @@ resource "aws_lambda_function" "lambda_function_custom_authorizer" {
   ]
 
   lifecycle {
-    ignore_changes = [source_code_hash, version, qualified_arn]
+    ignore_changes = [source_code_hash, qualified_arn]
   }
 }
 
