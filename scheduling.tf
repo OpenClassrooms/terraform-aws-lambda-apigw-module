@@ -20,7 +20,7 @@ resource "aws_cloudwatch_event_rule" "cloudwatch_event_rule" {
   name                = each.key
   description         = "${each.key} cloudwatch event rule"
   schedule_expression = each.value.expression
-  is_enabled          = var.scheduling_enabled
+  state               = var.scheduling_enabled ? "ENABLED" : "DISABLED"
   tags = merge({
     module           = "apigw_lambda",
     lambda_code_repo = var.lambda_code_repo,
